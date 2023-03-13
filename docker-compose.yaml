@@ -30,6 +30,18 @@ services:
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+
+  remote-schema:
+    build:
+      context: .
+      dockerfile: remote-schema/Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - "db"
+    volumes:
+      - ./remote-schema:/app
+
 volumes:
   db_data:
 
