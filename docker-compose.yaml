@@ -15,6 +15,7 @@ services:
     - "8080:8080"
     depends_on:
     - "db"
+    - "remote-schema"
     restart: always
     environment:
       ## postgres database to store Hasura metadata
@@ -30,6 +31,7 @@ services:
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_REMOTE_SCHEMA_ENDPOINT: http://host.docker.internal:8081/query
 
   remote-schema:
     build:
