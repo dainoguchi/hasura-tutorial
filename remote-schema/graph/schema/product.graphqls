@@ -1,0 +1,7 @@
+extend type Query {
+    masking_products: [product!]!
+}
+
+extend type Mutation {
+    createProduct(input: NewProduct!): product!
+}

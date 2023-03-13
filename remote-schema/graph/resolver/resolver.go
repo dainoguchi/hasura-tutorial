@@ -1,6 +1,7 @@
 package resolver
 
 import (
+	"gorm.io/gorm"
 	"remote-schema/graph/model"
 )
 
@@ -10,4 +11,5 @@ import (
 
 type Resolver struct {
 	products []*model.Product
+	DB       *gorm.DB
 }

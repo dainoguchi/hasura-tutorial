@@ -11,10 +11,6 @@ input NewProduct {
   name: String!
 }
 
-type Query {
-  masking_products: [product]
-}
+type Query
 
-type Mutation {
-  createProduct(input: NewProduct!): product!
-}
+type Mutation
