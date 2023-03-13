@@ -1,20 +1,47 @@
 package resolver
 
 import (
+	"database/sql"
 	"github.com/99designs/gqlgen/client"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/DATA-DOG/go-txdb"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 	"remote-schema/graph/generated"
 	"remote-schema/graph/model"
+	"remote-schema/pkg/config"
+	"remote-schema/pkg/db"
 	"remote-schema/test/factories"
 	"testing"
 )
+
+func OpenDBForTest(t *testing.T) *gorm.DB {
+	cfg, err := config.Environ()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txdb.Register("txdb", "postgres", cfg.Database.TestURL)
+	sqlDB, err := sql.Open("txdb", uuid.New().String())
+	if err != nil {
+		t.Fatal(err)
+	}
+	gormDB, err := db.InitWithDB(sqlDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return gormDB
+}
 
 func TestQueryResolver_MaskingProducts(t *testing.T) {
 	t.Helper()
 
 	// resolver生成
-	r := Resolver{}
+	r := Resolver{
+		DB: OpenDBForTest(t),
+	}
 
 	// clientの作成
 	c := client.New(handler.NewDefaultServer(
@@ -28,7 +55,7 @@ func TestQueryResolver_MaskingProducts(t *testing.T) {
 		product := factories.ProductFactory.MustCreate().(*model.Product)
 
 		// resolverに入れたいんだけど...
-		r.products = append(r.products, product)
+		r.DB.Create(product)
 	}
 
 	var resp struct {
