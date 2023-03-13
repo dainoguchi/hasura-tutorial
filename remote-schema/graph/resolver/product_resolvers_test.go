@@ -11,6 +11,8 @@ import (
 )
 
 func TestQueryResolver_MaskingProducts(t *testing.T) {
+	t.Helper()
+
 	// resolver生成
 	r := Resolver{}
 
@@ -36,8 +38,10 @@ func TestQueryResolver_MaskingProducts(t *testing.T) {
 		}
 	}
 
+	q := `{ masking_products { id, name } } `
+
 	// クエリ実行
-	c.MustPost(`{ masking_products { id, name } } `, &resp)
+	c.MustPost(q, &resp)
 
 	// assertion
 	assert.Equal(t, 3, len(resp.Masking_products))
