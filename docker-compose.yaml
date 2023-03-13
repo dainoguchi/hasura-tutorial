@@ -43,6 +43,9 @@ services:
       - "db"
     volumes:
       - ./remote-schema:/app
+    environment:
+      DB_URL: postgres://hasura:password@db:5432/postgres?sslmode=disable
+      TEST_DB_URL: postgres://hasura:password@db:5432/test?sslmode=disable
 
 volumes:
   db_data:
